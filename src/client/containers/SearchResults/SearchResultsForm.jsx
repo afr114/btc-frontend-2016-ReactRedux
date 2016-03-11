@@ -40,6 +40,7 @@ class SearchResultsForm extends Component {
         };
         this.onChange = this.onChange.bind(this);
         this.onSuggestionsUpdateRequested = this.onSuggestionsUpdateRequested.bind(this);
+        this.onSuggestionSelected = this.onSuggestionSelected.bind(this);
         this.setRef = this.setRef.bind(this);
     }
 
@@ -47,7 +48,7 @@ class SearchResultsForm extends Component {
       this.setState({
         isLoading: true
       });
-      
+
         fetchSuggestions(value).then((data)=>{
 
         let dataArr = [...data.candidate_names,...data.related]
@@ -89,6 +90,7 @@ class SearchResultsForm extends Component {
         e.stopPropagation();
         const {dispatch} = this.props;
         const searchTerm = this.searchTermRef;
+        debugger
         dispatch(fetchSearchData(searchTerm));
     }
 
@@ -135,6 +137,7 @@ class SearchResultsForm extends Component {
                                  <Autosuggest ref={()=>this.setRef(this.state.value)}
                                    suggestions={suggestions}
                                    onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
+                                   onSuggestionSelected={this.oonSuggestionSelected}
                                    getSuggestionValue={getSuggestionValue}
                                    renderSuggestion={renderSuggestion}
                                    inputProps={inputProps} />
