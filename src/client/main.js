@@ -18,6 +18,8 @@ import { Provider } from 'react-redux';
 import getRoutes from './routes/routes.js';
 import storeManager from './store/storeManager.js';
 
+// const initialState = window.__INITIAL_STATE__
+
 const routes = getRoutes();
 const store = storeManager();
 
