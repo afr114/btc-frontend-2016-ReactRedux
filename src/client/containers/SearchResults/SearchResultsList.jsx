@@ -19,15 +19,21 @@ class SearchResultsList extends Component {
     }
 
     render() {
-        const {list, fetching, searchTerm} = this.props;
+        const {list,errorMessage} = this.props;
+        debugger
         let listItems;
         console.log(this.props);
-        let errorMessage = null;
-        if (list && list.length == 0) {
-          errorMessage = (
-            <div colSpan="12">
-          </div>
-          );
+        let errorMsg = null;
+        // if (list && list.length == 0) {
+        //   errorMsg = (
+        //     <div colSpan="12">
+        //   </div>
+        //   );
+        // }
+        if (errorMessage.error === 'trigger') {
+          errorMessage.error = '';
+          errorMsg = (<SearchResultsAlert />);
+          return errorMsg
         }
         if (list && list.length > 0) {
             listItems = list.map((item, index) => {
@@ -42,14 +48,16 @@ class SearchResultsList extends Component {
                     </div>
                 );
         } else if (list && list.length == 0) {
+          debugger
           return (<div colSpan="12" {...this.props}>
                       <SearchResultsHeader />
-                    <SearchResultsAlert searchTerm={this.searchTerm} />
+                    <SearchResultsAlert />
                   </div>
               );
         } else {
           return (<div colSpan="12" {...this.props}>
                       <SearchResultsHeader />
+                      {errorMsg}
                   </div>
               );
         }
@@ -57,9 +65,9 @@ class SearchResultsList extends Component {
     }
 }
 function mapStateToProps(state) {
-    const {searchData: {list, fetching, searchTerm}} = state;
+    const {entities:{searchData:{list}},errorMessage} = state;
     return {
-        list , fetching, searchTerm
+      errorMessage, list
     };
 }
 

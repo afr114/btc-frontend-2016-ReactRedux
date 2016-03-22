@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col, Button, Input } from 'react-bootstrap';
-import { fetchSearchData } from '../../actions/index.js';
+import { loadSearchData } from '../../actions/index.js';
+// import { fetchSearchData } from '../../actions/SearchResults/SearchResultsFormActions';
 import Autosuggest from 'react-autosuggest';
 import fetchSuggestions from '../../utils/fetchSuggestions.js';
 
@@ -36,7 +37,6 @@ class SearchResultsForm extends Component {
         this.state = {
             value: '',
             suggestions: getMatches(''),
-            isLoading: false
         };
         this.onChange = this.onChange.bind(this);
         this.onSuggestionsUpdateRequested = this.onSuggestionsUpdateRequested.bind(this);
@@ -73,8 +73,11 @@ class SearchResultsForm extends Component {
       });
     }
 
-    onSuggestionSelected(event, { suggestionValue }) {
-      this.loadSuggestions(suggestionValue);
+    onSuggestionSelected(e, { suggestionValue }) {
+      debugger
+      this.setState({searchTerm: suggestionValue})
+      const {dispatch} = this.props;
+      dispatch(loadSearchData(suggestionValue));
     }
 
     onSuggestionsUpdateRequested({ value }) {
@@ -88,44 +91,38 @@ class SearchResultsForm extends Component {
     handleFetch(e) {
         e.preventDefault();
         e.stopPropagation();
+
         const {dispatch} = this.props;
-        const searchTerm = this.searchTermRef;
-        debugger
-        dispatch(fetchSearchData(searchTerm));
+        // const searchTerm = this.searchTermRef;
+        if(!this.searchTermRef.trim()){return}
+        dispatch(loadSearchData(this.searchTermRef));
     }
 
     render() {
-      const {status, statusText} = this.props;
-      const { value, suggestions, isLoading, noResults } = this.state;
+      const { value, suggestions, isLoading, noResults} = this.state;
+
       const inputProps = {
       placeholder: 'Search for candidates, measures or PAC name',
       value,
       className: 'form-control input-group',
       onChange: this.onChange
       };
-        let enterMessage = false;
-        let errorMessage = false;
+
+      const iconstyle = {
+        position: 'absolute',
+        top: '10px',
+        right: '30px',
+        color: '#888'
+      }
+        let enterMessage = (<i style={iconstyle} className={"fa fa-search"}></i>);
         let fetchButton = null;
 
         if (this.state.value.length > 0){
           enterMessage = (
-            <p style={{color:'#888'}}>Press Enter/return to search</p>
+            <i style={iconstyle}>Press Enter/return to search</i>
           );
         }
-        if (status === 'error') {
 
-        }
-        if (status === 'loading') {
-            errorMessage = false;
-        } else {
-
-        }
-        const iconstyle = {
-          position: 'absolute',
-          top: '10px',
-          right: '30px',
-          color: '#888'
-        }
         return (<form {...this.props} onSubmit={ this.handleFetch }>
                     <Grid fluid={ true }>
                         <Row>
@@ -137,12 +134,14 @@ class SearchResultsForm extends Component {
                                  <Autosuggest ref={()=>this.setRef(this.state.value)}
                                    suggestions={suggestions}
                                    onSuggestionsUpdateRequested={this.onSuggestionsUpdateRequested}
-                                   onSuggestionSelected={this.oonSuggestionSelected}
+                                   onSuggestionSelected={this.onSuggestionSelected}
                                    getSuggestionValue={getSuggestionValue}
                                    renderSuggestion={renderSuggestion}
                                    inputProps={inputProps} />
-                                 <i style={iconstyle} className={"fa fa-search"}></i>
                                  {enterMessage}
+
+
+
                           </Col>
                         </Row>
 
@@ -152,12 +151,13 @@ class SearchResultsForm extends Component {
     }
 }
 function mapStateToProps(state) {
-    const {searchData: {fetching: {status, statusText},searchTerm}} = state;
+    const {entities:{searchData}} = state;
+    debugger
+    // const searchTerm = this.value;
     return {
-        searchTerm,
-        status,
-        statusText
+        searchData
     };
 }
 
+// export default SearchResultsForm;
 export default connect(mapStateToProps)(SearchResultsForm);
