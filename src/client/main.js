@@ -16,9 +16,10 @@ import storeManager from './store/storeManager.js';
 import { browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import DevTools from './containers/DevTools.jsx';
+import { ReduxRouter } from 'redux-router'
 
 
-// const initialState = window.__INITIAL_STATE__
+const initialState = window.__INITIAL_STATE__
 
 const store = storeManager();
 const history = syncHistoryWithStore(browserHistory, store)
