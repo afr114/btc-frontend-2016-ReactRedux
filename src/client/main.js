@@ -18,16 +18,16 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import DevTools from './containers/DevTools.jsx';
 import { ReduxRouter } from 'redux-router'
 
-
-const initialState = window.__INITIAL_STATE__
-
 const store = storeManager();
 const history = syncHistoryWithStore(browserHistory, store)
 const routes = getRoutes(history);
-
+const mainStyles = {
+  fontFamily: 'Helvetica',
+  fontWeight: '300'
+}
 ReactDOM.render(
     <Provider store={store} >
-        <div>
+        <div style={mainStyles}>
         {routes}
         <DevTools />
         </div>
