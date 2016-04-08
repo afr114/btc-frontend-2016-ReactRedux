@@ -6,7 +6,7 @@
   "scripts": {
     "test": "karma start",
     "clean": "rimraf ./public/resources",
-    "start": "npm run clean & node index.js",
+    "start": "npm run clean & node devServer.js",
     "build-server": "gulp --gulpfile ./build-conf/gulpfile.js build-server",
     "build-server-dev": "gulp --gulpfile ./build-conf/gulpfile.js build-server-dev",
     "build-client": "webpack --config ./build-conf/webpack.config.js --progress --colors",
